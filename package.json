@@ -12,7 +12,9 @@
     "lint": "run-s lint:*",
     "lint:oxlint": "oxlint . --fix",
     "lint:eslint": "eslint . --fix --cache",
-    "format": "prettier --write --experimental-cli src/"
+    "format": "prettier --write --experimental-cli src/",
+    "sync": "node scripts/sync-steam.mjs",
+    "import": "node scripts/import-save.mjs"
   },
   "dependencies": {
     "pinia": "^3.0.4",

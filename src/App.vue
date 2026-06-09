@@ -1,85 +1,79 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <header class="app-header">
+    <RouterLink to="/" class="brand">
+      <span class="brand-icon">🏆</span>
+      <span class="brand-name">gameach</span>
+    </RouterLink>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
+    <nav class="app-nav">
+      <RouterLink to="/">Dashboard</RouterLink>
+    </nav>
   </header>
 
-  <RouterView />
+  <main class="app-main">
+    <RouterView />
+  </main>
+
+  <footer class="app-footer">
+    Achievement-data fra
+    <a href="https://store.steampowered.com/app/1158160/Coral_Island/" target="_blank" rel="noopener">Steam</a>.
+    gameach er ikke tilknyttet eller godkendt af Valve eller Steam.
+  </footer>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--color-border);
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  color: var(--color-heading);
 }
 
-nav {
+.brand-icon {
+  font-size: 1.4rem;
+}
+
+.brand-name {
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
+.app-nav {
+  display: flex;
+  gap: 1.25rem;
+  font-size: 0.95rem;
+}
+
+.app-nav a.router-link-exact-active {
+  color: var(--color-heading);
+}
+
+.app-main {
+  flex: 1;
   width: 100%;
-  font-size: 12px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.app-footer {
   text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+  padding: 1.5rem 2rem;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
 }
 </style>

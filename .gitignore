@@ -14,6 +14,11 @@ dist-ssr
 coverage
 *.local
 
+# Local env / secrets — the Steam Web API key lives here, never commit it
+.env
+.env.*
+!.env.example
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -37,3 +42,10 @@ __screenshots__/
 
 # Vite
 *.timestamp-*-*.mjs
+
+# Playwright MCP artifacts (screenshots/snapshots from local verification)
+.playwright-mcp/
+
+# Decompressed Coral Island save dumps (personal game data — analysis only)
+*.sav
+save-decompressed*.bin
