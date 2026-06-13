@@ -1,11 +1,33 @@
 export type AchievementKind = 'simple' | 'collection'
 
+/**
+ * Catch/find details for fish, bugs, sea critters and foraged items, sourced from the
+ * wiki infoboxes by scripts/fetch-metadata.mjs. All optional — only present where the
+ * wiki has the field.
+ */
+export interface ItemMeta {
+  /** Fish only: Small / Medium / Large. */
+  size?: string
+  /** Seasons it's available, e.g. ["Spring","Summer"] or ["Any"]. */
+  seasons?: string[]
+  /** Where to catch/find it (cleaned wiki text). */
+  location?: string
+  /** Time of day, e.g. "Night", "All day". */
+  time?: string
+  /** Weather requirement, e.g. "Any", "Sunny". */
+  weather?: string
+  /** Rarity, e.g. "Common", "Uncommon", "Rare". */
+  rarity?: string
+}
+
 /** A single tickable entry inside a collection achievement (e.g. one craftable item). */
 export interface CollectionItem {
   id: string
   name: string
   /** Local asset path or remote URL; filled in when we source images from the wiki. */
   image?: string
+  /** Catch/find details (fish, bugs, sea critters, foraged); see ItemMeta. */
+  meta?: ItemMeta
 }
 
 /** The set of items behind a "complete all X" achievement. */

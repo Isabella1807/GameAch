@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { collectionsByKey } from '@/data/collections'
 import { useAchievementsStore } from '@/stores/achievements'
-import type { CollectionItem } from '@/types/achievement'
+import type { CollectionItem, ItemMeta } from '@/types/achievement'
 import ProgressBar from './ProgressBar.vue'
 
 const props = defineProps<{ collectionKey: string }>()
@@ -47,6 +47,19 @@ const query = ref<Record<string, string>>({})
 function filterItems(key: string, items: CollectionItem[]): CollectionItem[] {
   const q = (query.value[key] ?? '').trim().toLowerCase()
   return q ? items.filter((i) => i.name.toLowerCase().includes(q)) : items
+}
+
+// Compact catch/find summary shown under an item's name (size · season · time · rarity).
+// Weather is only shown when it's an actual requirement (not "Any"); location renders
+// on its own line.
+function metaSummary(meta: ItemMeta): string {
+  const seasons = meta.seasons?.length
+    ? meta.seasons.length === 1 && meta.seasons[0] === 'Any'
+      ? 'Alle årstider'
+      : meta.seasons.join(', ')
+    : ''
+  const weather = meta.weather && meta.weather !== 'Any' ? meta.weather : ''
+  return [meta.size, seasons, meta.time, weather, meta.rarity].filter(Boolean).join(' · ')
 }
 
 // Bulk check/clear. Always scoped to a single list so a click can't wipe more than
@@ -114,7 +127,13 @@ function setFlat(value: boolean) {
                   @change="onToggle(part.key, item.id, $event)"
                 />
                 <img v-if="item.image" :src="item.image" :alt="item.name" class="thumb" />
-                <span class="label">{{ item.name }}</span>
+                <span class="body">
+                  <span class="label">{{ item.name }}</span>
+                  <span v-if="item.meta" class="meta">
+                    <span v-if="metaSummary(item.meta)" class="meta-main">{{ metaSummary(item.meta) }}</span>
+                    <span v-if="item.meta.location" class="meta-loc">📍 {{ item.meta.location }}</span>
+                  </span>
+                </span>
               </label>
             </div>
             <p v-else class="empty-search">Ingen match for “{{ query[part.key] }}”.</p>
@@ -143,7 +162,13 @@ function setFlat(value: boolean) {
             @change="store.toggleItem(collectionKey, item.id, ($event.target as HTMLInputElement).checked)"
           />
           <img v-if="item.image" :src="item.image" :alt="item.name" class="thumb" />
-          <span class="label">{{ item.name }}</span>
+          <span class="body">
+            <span class="label">{{ item.name }}</span>
+            <span v-if="item.meta" class="meta">
+              <span v-if="metaSummary(item.meta)" class="meta-main">{{ metaSummary(item.meta) }}</span>
+              <span v-if="item.meta.location" class="meta-loc">📍 {{ item.meta.location }}</span>
+            </span>
+          </span>
         </label>
       </div>
       <p v-else class="empty-search">Ingen match for “{{ query[collectionKey] }}”.</p>
@@ -249,13 +274,13 @@ function setFlat(value: boolean) {
 }
 .items {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 0.4rem;
   margin: 0.4rem 0 0.8rem;
 }
 .item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.55rem;
   padding: 0.45rem 0.6rem;
   background: var(--color-surface-hover);
@@ -282,6 +307,7 @@ function setFlat(value: boolean) {
 .item input {
   width: 16px;
   height: 16px;
+  margin-top: 0.1rem;
   accent-color: var(--color-accent);
   cursor: pointer;
 }
@@ -292,9 +318,27 @@ function setFlat(value: boolean) {
   width: 26px;
   height: 26px;
   object-fit: contain;
+  flex-shrink: 0;
+}
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+  min-width: 0;
 }
 .label {
   font-size: 0.85rem;
+}
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  font-size: 0.7rem;
+  line-height: 1.25;
+  color: var(--color-text-muted);
+}
+.meta-loc {
+  opacity: 0.85;
 }
 .empty {
   padding: 1rem;
