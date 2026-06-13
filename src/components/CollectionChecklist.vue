@@ -30,11 +30,37 @@ const parts = computed(() =>
 )
 
 const itemDone = (partKey: string, itemId: string) =>
-  shipped.value ? store.isItemShipped(itemId) : store.isItemChecked(partKey, itemId)
+  shipped.value ? store.isShippedDone(partKey, itemId) : store.isItemChecked(partKey, itemId)
+
+// localStorage key a manual toggle is stored under. Shipped (Legendary Farmer) toggles
+// are namespaced so they don't clash with the same collection's caught/collected state.
+const storeKey = (partKey: string) => (shipped.value ? `shipped:${partKey}` : partKey)
+
+function onToggle(partKey: string, itemId: string, e: Event) {
+  store.toggleItem(storeKey(partKey), itemId, (e.target as HTMLInputElement).checked)
+}
+
+// Bulk check/clear every item in this list. For union collections it spans all
+// constituents. A manual toggle always wins, so "Ryd alle" empties a list even when
+// it's marked complete on Steam or by the imported save.
+function setAll(value: boolean) {
+  if (collection.value?.composedOf) {
+    for (const part of parts.value) {
+      store.setItems(storeKey(part.key), part.items.map((i) => i.id), value)
+    }
+  } else if (collection.value) {
+    store.setItems(props.collectionKey, collection.value.items.map((i) => i.id), value)
+  }
+}
 </script>
 
 <template>
   <div class="checklist">
+    <div v-if="collection && (collection.composedOf || collection.items.length)" class="bulk">
+      <button type="button" @click="setAll(true)">Tjek alle</button>
+      <button type="button" @click="setAll(false)">Ryd alle</button>
+    </div>
+
     <!-- Union collection: roll-up of constituent collections -->
     <template v-if="collection?.composedOf">
       <p class="hint">
@@ -71,8 +97,7 @@ const itemDone = (partKey: string, itemId: string) =>
               <input
                 type="checkbox"
                 :checked="itemDone(part.key, item.id)"
-                :disabled="shipped"
-                @change="!shipped && store.toggleItem(part.key, item.id)"
+                @change="onToggle(part.key, item.id, $event)"
               />
               <img v-if="item.image" :src="item.image" :alt="item.name" class="thumb" />
               <span class="label">{{ item.name }}</span>
@@ -93,7 +118,7 @@ const itemDone = (partKey: string, itemId: string) =>
         <input
           type="checkbox"
           :checked="store.isItemChecked(collectionKey, item.id)"
-          @change="store.toggleItem(collectionKey, item.id)"
+          @change="store.toggleItem(collectionKey, item.id, ($event.target as HTMLInputElement).checked)"
         />
         <img v-if="item.image" :src="item.image" :alt="item.name" class="thumb" />
         <span class="label">{{ item.name }}</span>
@@ -105,6 +130,28 @@ const itemDone = (partKey: string, itemId: string) =>
 </template>
 
 <style scoped>
+.bulk {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.7rem;
+}
+.bulk button {
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.8rem;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
+}
+.bulk button:hover {
+  border-color: var(--color-border-hover);
+  color: var(--color-text);
+}
 .hint {
   font-size: 0.8rem;
   color: var(--color-text-muted);

@@ -75,16 +75,35 @@ export const useAchievementsStore = defineStore('achievements', () => {
     return Boolean(apiName && syncedApiNames.has(apiName))
   }
 
-  /** An item is done if checked manually OR marked done by the imported save (caught/crafted). */
+  /**
+   * An item is done if a manual toggle is set, the collection's own Steam achievement
+   * is unlocked, or the imported save marks it (caught/crafted). A manual toggle —
+   * true OR false — always wins, so the user can override save/Steam state (e.g. clear
+   * a list to re-track it). This keeps the per-item checkboxes and the progress bar in
+   * agreement, since both derive from this function.
+   */
   function isItemChecked(collectionKey: string, itemId: string): boolean {
-    return (
-      Boolean(checked.value[collectionKey]?.[itemId]) ||
-      Boolean(savedChecked[collectionKey]?.has(normSlug(itemId)))
-    )
+    const manual = checked.value[collectionKey]?.[itemId]
+    if (manual !== undefined) return manual
+    if (isCollectionSteamComplete(collectionKey)) return true
+    return Boolean(savedChecked[collectionKey]?.has(normSlug(itemId)))
   }
 
-  /** Whether an item has been shipped at least once (from the save). */
-  function isItemShipped(itemId: string): boolean {
+  /**
+   * Shipped-state for a Legendary Farmer item. Manual toggles live under a
+   * `shipped:`-namespaced key so they never clash with the caught/collected state of
+   * the same collection. A manual toggle always wins; otherwise crops/animal products
+   * honour their "ship all X" Steam achievement, then fall back to the save.
+   */
+  function isShippedDone(collectionKey: string, itemId: string): boolean {
+    const manual = checked.value[`shipped:${collectionKey}`]?.[itemId]
+    if (manual !== undefined) return manual
+    if (
+      (collectionKey === 'crops' || collectionKey === 'animal-products') &&
+      isCollectionSteamComplete(collectionKey)
+    ) {
+      return true
+    }
     return shippedSlugs.has(normSlug(itemId))
   }
 
@@ -102,22 +121,15 @@ export const useAchievementsStore = defineStore('achievements', () => {
       )
     }
     const total = col?.items.length ?? 0
-    // If the collection's own achievement is already unlocked on Steam, it's fully done.
-    if (isCollectionSteamComplete(key)) return { done: total, total }
     const done = col ? col.items.filter((i) => isItemChecked(key, i.id)).length : 0
     return { done, total }
   }
 
-  /** How many of a collection's items have been shipped (for Legendary Farmer). */
+  /** How many of a collection's items count as shipped (for Legendary Farmer). */
   function shippedProgress(key: string): { done: number; total: number } {
     const col = collectionsByKey[key]
     const total = col?.items.length ?? 0
-    // crops + animal products have "ship all X" Steam achievements (You Name It /
-    // Operation Trophy Rancher) — honour those as fully shipped.
-    if ((key === 'crops' || key === 'animal-products') && isCollectionSteamComplete(key)) {
-      return { done: total, total }
-    }
-    const done = col ? col.items.filter((i) => isItemShipped(i.id)).length : 0
+    const done = col ? col.items.filter((i) => isShippedDone(key, i.id)).length : 0
     return { done, total }
   }
 
@@ -164,6 +176,12 @@ export const useAchievementsStore = defineStore('achievements', () => {
     map[itemId] = value ?? !map[itemId]
   }
 
+  /** Bulk-set every given item in a (possibly `shipped:`-namespaced) collection. */
+  function setItems(storeKey: string, itemIds: string[], value: boolean) {
+    const map = checked.value[storeKey] ?? (checked.value[storeKey] = {})
+    for (const id of itemIds) map[id] = value
+  }
+
   return {
     unlocked,
     checked,
@@ -180,7 +198,8 @@ export const useAchievementsStore = defineStore('achievements', () => {
     shippedList,
     toggleAchievement,
     toggleItem,
+    setItems,
     isItemChecked,
-    isItemShipped,
+    isShippedDone,
   }
 })
