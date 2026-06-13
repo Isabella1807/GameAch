@@ -44,9 +44,40 @@ function onToggle(partKey: string, itemId: string, e: Event) {
 // Per-list search query, keyed by list (constituent key for unions, the collection key
 // for flat lists). Filters items by name, case-insensitively.
 const query = ref<Record<string, string>>({})
+
+// Danish aliases so a season search works in either language (the data uses the game's
+// English season names).
+const SEASON_ALIAS: Record<string, string> = {
+  Spring: 'forår',
+  Summer: 'sommer',
+  Fall: 'efterår',
+  Winter: 'vinter',
+}
+
+// Everything an item can be matched on: its name plus all the visible meta (size, season,
+// location, time, weather, rarity). An "Any"-season item matches any season term, since
+// it's available all year.
+function haystack(item: CollectionItem): string {
+  const parts = [item.name]
+  const m = item.meta
+  if (m) {
+    if (m.size) parts.push(m.size)
+    for (const s of m.seasons ?? []) {
+      if (s === 'Any')
+        parts.push('any alle årstider', ...Object.keys(SEASON_ALIAS), ...Object.values(SEASON_ALIAS))
+      else parts.push(s, SEASON_ALIAS[s] ?? '')
+    }
+    if (m.location) parts.push(m.location)
+    if (m.time) parts.push(m.time)
+    if (m.weather) parts.push(m.weather)
+    if (m.rarity) parts.push(m.rarity)
+  }
+  return parts.join(' ').toLowerCase()
+}
+
 function filterItems(key: string, items: CollectionItem[]): CollectionItem[] {
   const q = (query.value[key] ?? '').trim().toLowerCase()
-  return q ? items.filter((i) => i.name.toLowerCase().includes(q)) : items
+  return q ? items.filter((i) => haystack(i).includes(q)) : items
 }
 
 // Compact catch/find summary shown under an item's name (size · season · time · rarity).
@@ -112,7 +143,13 @@ function setFlat(value: boolean) {
             <div class="bulk">
               <button type="button" @click="setPart(part.key, true)">Tjek alle</button>
               <button type="button" @click="setPart(part.key, false)">Ryd alle</button>
-              <input v-model="query[part.key]" type="search" class="search" placeholder="Søg…" />
+              <input
+                v-model="query[part.key]"
+                type="search"
+                class="search"
+                placeholder="Søg…"
+                title="Søg på navn, årstid, sted, tidspunkt, vejr eller sjældenhed"
+              />
             </div>
             <div v-if="filterItems(part.key, part.items).length" class="items">
               <label
@@ -147,7 +184,13 @@ function setFlat(value: boolean) {
       <div class="bulk">
         <button type="button" @click="setFlat(true)">Tjek alle</button>
         <button type="button" @click="setFlat(false)">Ryd alle</button>
-        <input v-model="query[collectionKey]" type="search" class="search" placeholder="Søg…" />
+        <input
+          v-model="query[collectionKey]"
+          type="search"
+          class="search"
+          placeholder="Søg…"
+          title="Søg på navn, årstid, sted, tidspunkt, vejr eller sjældenhed"
+        />
       </div>
       <div v-if="filterItems(collectionKey, collection.items).length" class="items">
         <label
