@@ -44,8 +44,19 @@ const slug = (n) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '')
 
+// Skill/mechanic pages that carry a collection's category tag on the wiki but aren't
+// collectible items (e.g. Category:Foraging includes the "Foraging" skill page and the
+// "Trees" mechanic page). Keep this list of exact page titles out of the generated data.
+const DENY = new Set([
+  'Foraging', 'Trees', 'Fishing', 'Diving', 'Mining', 'Farming', 'Ranching',
+  'Cooking', 'Crafting', 'Combat', 'Mastery', 'Animals', 'Bug catching', 'Insects',
+])
+
 const items = Object.values(pages)
-  .filter((p) => p.title && !p.title.includes('/') && !p.title.startsWith('Category:'))
+  .filter(
+    (p) =>
+      p.title && !p.title.includes('/') && !p.title.startsWith('Category:') && !DENY.has(p.title),
+  )
   .map((p) => ({ name: p.title, image: p.original?.source ?? null }))
   .sort((a, b) => a.name.localeCompare(b.name))
 
