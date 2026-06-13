@@ -40,15 +40,17 @@ function onToggle(partKey: string, itemId: string, e: Event) {
   store.toggleItem(storeKey(partKey), itemId, (e.target as HTMLInputElement).checked)
 }
 
-// Bulk check/clear every item in this list. For union collections it spans all
-// constituents. A manual toggle always wins, so "Ryd alle" empties a list even when
-// it's marked complete on Steam or by the imported save.
-function setAll(value: boolean) {
-  if (collection.value?.composedOf) {
-    for (const part of parts.value) {
-      store.setItems(storeKey(part.key), part.items.map((i) => i.id), value)
-    }
-  } else if (collection.value) {
+// Bulk check/clear. Always scoped to a single list so a click can't wipe more than
+// the user is looking at: setPart() targets one constituent of a union collection,
+// setFlat() the whole (non-union) list. A manual toggle always wins, so "Ryd alle"
+// empties a list even when it's marked complete on Steam or by the imported save.
+function setPart(partKey: string, value: boolean) {
+  const part = parts.value.find((p) => p.key === partKey)
+  if (part) store.setItems(storeKey(partKey), part.items.map((i) => i.id), value)
+}
+
+function setFlat(value: boolean) {
+  if (collection.value) {
     store.setItems(props.collectionKey, collection.value.items.map((i) => i.id), value)
   }
 }
@@ -56,11 +58,6 @@ function setAll(value: boolean) {
 
 <template>
   <div class="checklist">
-    <div v-if="collection && (collection.composedOf || collection.items.length)" class="bulk">
-      <button type="button" @click="setAll(true)">Tjek alle</button>
-      <button type="button" @click="setAll(false)">Ryd alle</button>
-    </div>
-
     <!-- Union collection: roll-up of constituent collections -->
     <template v-if="collection?.composedOf">
       <p class="hint">
@@ -87,43 +84,55 @@ function setAll(value: boolean) {
               <span class="chev">{{ open[part.key] ? '▴' : '▾' }}</span>
             </span>
           </button>
-          <div v-if="open[part.key]" class="items">
-            <label
-              v-for="item in part.items"
-              :key="item.id"
-              class="item"
-              :class="{ done: itemDone(part.key, item.id) }"
-            >
-              <input
-                type="checkbox"
-                :checked="itemDone(part.key, item.id)"
-                @change="onToggle(part.key, item.id, $event)"
-              />
-              <img v-if="item.image" :src="item.image" :alt="item.name" class="thumb" />
-              <span class="label">{{ item.name }}</span>
-            </label>
+          <div v-if="open[part.key]" class="part-body">
+            <div class="bulk">
+              <button type="button" @click="setPart(part.key, true)">Tjek alle</button>
+              <button type="button" @click="setPart(part.key, false)">Ryd alle</button>
+            </div>
+            <div class="items">
+              <label
+                v-for="item in part.items"
+                :key="item.id"
+                class="item"
+                :class="{ done: itemDone(part.key, item.id) }"
+              >
+                <input
+                  type="checkbox"
+                  :checked="itemDone(part.key, item.id)"
+                  @change="onToggle(part.key, item.id, $event)"
+                />
+                <img v-if="item.image" :src="item.image" :alt="item.name" class="thumb" />
+                <span class="label">{{ item.name }}</span>
+              </label>
+            </div>
           </div>
         </template>
       </div>
     </template>
 
     <!-- Normal collection: flat item checklist -->
-    <div v-else-if="collection && collection.items.length" class="items">
-      <label
-        v-for="item in collection.items"
-        :key="item.id"
-        class="item"
-        :class="{ done: store.isItemChecked(collectionKey, item.id) }"
-      >
-        <input
-          type="checkbox"
-          :checked="store.isItemChecked(collectionKey, item.id)"
-          @change="store.toggleItem(collectionKey, item.id, ($event.target as HTMLInputElement).checked)"
-        />
-        <img v-if="item.image" :src="item.image" :alt="item.name" class="thumb" />
-        <span class="label">{{ item.name }}</span>
-      </label>
-    </div>
+    <template v-else-if="collection && collection.items.length">
+      <div class="bulk">
+        <button type="button" @click="setFlat(true)">Tjek alle</button>
+        <button type="button" @click="setFlat(false)">Ryd alle</button>
+      </div>
+      <div class="items">
+        <label
+          v-for="item in collection.items"
+          :key="item.id"
+          class="item"
+          :class="{ done: store.isItemChecked(collectionKey, item.id) }"
+        >
+          <input
+            type="checkbox"
+            :checked="store.isItemChecked(collectionKey, item.id)"
+            @change="store.toggleItem(collectionKey, item.id, ($event.target as HTMLInputElement).checked)"
+          />
+          <img v-if="item.image" :src="item.image" :alt="item.name" class="thumb" />
+          <span class="label">{{ item.name }}</span>
+        </label>
+      </div>
+    </template>
 
     <div v-else class="empty">🌱 Listen er ikke fyldt på endnu — items + billeder kommer snart.</div>
   </div>
@@ -134,6 +143,12 @@ function setAll(value: boolean) {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 0.7rem;
+}
+.part-body {
+  margin-top: 0.4rem;
+}
+.part-body .bulk {
+  margin-bottom: 0.2rem;
 }
 .bulk button {
   padding: 0.3rem 0.8rem;
