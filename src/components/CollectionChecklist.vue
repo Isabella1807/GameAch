@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { collectionsByKey } from '@/data/collections'
 import { useAchievementsStore } from '@/stores/achievements'
+import type { CollectionItem } from '@/types/achievement'
 import ProgressBar from './ProgressBar.vue'
 
 const props = defineProps<{ collectionKey: string }>()
@@ -40,18 +41,28 @@ function onToggle(partKey: string, itemId: string, e: Event) {
   store.toggleItem(storeKey(partKey), itemId, (e.target as HTMLInputElement).checked)
 }
 
+// Per-list search query, keyed by list (constituent key for unions, the collection key
+// for flat lists). Filters items by name, case-insensitively.
+const query = ref<Record<string, string>>({})
+function filterItems(key: string, items: CollectionItem[]): CollectionItem[] {
+  const q = (query.value[key] ?? '').trim().toLowerCase()
+  return q ? items.filter((i) => i.name.toLowerCase().includes(q)) : items
+}
+
 // Bulk check/clear. Always scoped to a single list so a click can't wipe more than
 // the user is looking at: setPart() targets one constituent of a union collection,
-// setFlat() the whole (non-union) list. A manual toggle always wins, so "Ryd alle"
-// empties a list even when it's marked complete on Steam or by the imported save.
+// setFlat() the whole (non-union) list. When a search is active it applies only to the
+// matching items. A manual toggle always wins, so "Ryd alle" empties even a list that's
+// marked complete on Steam or by the imported save.
 function setPart(partKey: string, value: boolean) {
   const part = parts.value.find((p) => p.key === partKey)
-  if (part) store.setItems(storeKey(partKey), part.items.map((i) => i.id), value)
+  if (part) store.setItems(storeKey(partKey), filterItems(partKey, part.items).map((i) => i.id), value)
 }
 
 function setFlat(value: boolean) {
   if (collection.value) {
-    store.setItems(props.collectionKey, collection.value.items.map((i) => i.id), value)
+    const ids = filterItems(props.collectionKey, collection.value.items).map((i) => i.id)
+    store.setItems(props.collectionKey, ids, value)
   }
 }
 </script>
@@ -88,10 +99,11 @@ function setFlat(value: boolean) {
             <div class="bulk">
               <button type="button" @click="setPart(part.key, true)">Tjek alle</button>
               <button type="button" @click="setPart(part.key, false)">Ryd alle</button>
+              <input v-model="query[part.key]" type="search" class="search" placeholder="Søg…" />
             </div>
-            <div class="items">
+            <div v-if="filterItems(part.key, part.items).length" class="items">
               <label
-                v-for="item in part.items"
+                v-for="item in filterItems(part.key, part.items)"
                 :key="item.id"
                 class="item"
                 :class="{ done: itemDone(part.key, item.id) }"
@@ -105,6 +117,7 @@ function setFlat(value: boolean) {
                 <span class="label">{{ item.name }}</span>
               </label>
             </div>
+            <p v-else class="empty-search">Ingen match for “{{ query[part.key] }}”.</p>
           </div>
         </template>
       </div>
@@ -115,10 +128,11 @@ function setFlat(value: boolean) {
       <div class="bulk">
         <button type="button" @click="setFlat(true)">Tjek alle</button>
         <button type="button" @click="setFlat(false)">Ryd alle</button>
+        <input v-model="query[collectionKey]" type="search" class="search" placeholder="Søg…" />
       </div>
-      <div class="items">
+      <div v-if="filterItems(collectionKey, collection.items).length" class="items">
         <label
-          v-for="item in collection.items"
+          v-for="item in filterItems(collectionKey, collection.items)"
           :key="item.id"
           class="item"
           :class="{ done: store.isItemChecked(collectionKey, item.id) }"
@@ -132,6 +146,7 @@ function setFlat(value: boolean) {
           <span class="label">{{ item.name }}</span>
         </label>
       </div>
+      <p v-else class="empty-search">Ingen match for “{{ query[collectionKey] }}”.</p>
     </template>
 
     <div v-else class="empty">🌱 Listen er ikke fyldt på endnu — items + billeder kommer snart.</div>
@@ -166,6 +181,25 @@ function setFlat(value: boolean) {
 .bulk button:hover {
   border-color: var(--color-border-hover);
   color: var(--color-text);
+}
+.bulk .search {
+  flex: 1;
+  min-width: 6rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.8rem;
+}
+.bulk .search::placeholder {
+  color: var(--color-text-muted);
+}
+.empty-search {
+  padding: 0.4rem 0.2rem;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
 }
 .hint {
   font-size: 0.8rem;
