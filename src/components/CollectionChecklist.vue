@@ -80,6 +80,20 @@ function filterItems(key: string, items: CollectionItem[]): CollectionItem[] {
   return q ? items.filter((i) => haystack(i).includes(q)) : items
 }
 
+// What actually renders in a list: filtered, then sorted so the items you haven't
+// done yet come first and the done ones sink to the bottom — alphabetical within
+// each group. Re-sorts live as you tick items off.
+function visibleItems(key: string, items: CollectionItem[]): CollectionItem[] {
+  return filterItems(key, items)
+    .slice()
+    .sort((a, b) => {
+      const da = itemDone(key, a.id)
+      const db = itemDone(key, b.id)
+      if (da !== db) return da ? 1 : -1
+      return a.name.localeCompare(b.name, 'da')
+    })
+}
+
 // Compact catch/find summary shown under an item's name (size · season · time · rarity).
 // Weather is only shown when it's an actual requirement (not "Any"); location renders
 // on its own line.
@@ -153,7 +167,7 @@ function setFlat(value: boolean) {
             </div>
             <div v-if="filterItems(part.key, part.items).length" class="items">
               <label
-                v-for="item in filterItems(part.key, part.items)"
+                v-for="item in visibleItems(part.key, part.items)"
                 :key="item.id"
                 class="item"
                 :class="{ done: itemDone(part.key, item.id) }"
@@ -194,7 +208,7 @@ function setFlat(value: boolean) {
       </div>
       <div v-if="filterItems(collectionKey, collection.items).length" class="items">
         <label
-          v-for="item in filterItems(collectionKey, collection.items)"
+          v-for="item in visibleItems(collectionKey, collection.items)"
           :key="item.id"
           class="item"
           :class="{ done: store.isItemChecked(collectionKey, item.id) }"
