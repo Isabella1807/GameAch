@@ -59,6 +59,41 @@ if (list.length === 0) {
   process.exit(1)
 }
 
+// Steam returns EMPTY descriptions for Icarus' hidden (spoiler) achievements, even via
+// the API. These are filled in from the community "Global Achievement Guide" so the
+// tracker still shows what each one needs. Keyed by Steam apiname (stable). Re-running
+// the generator re-applies them, so they survive a refresh.
+// Source: https://steamcommunity.com/sharedfiles/filedetails/?id=3660158884
+const HIDDEN_DESCRIPTIONS = {
+  // Prometheus — New Frontiers story (unlock by progressing the storyline)
+  ACH_PROMETHEUS_1: 'Land in Prometheus for the first time',
+  ACH_PROMETHEUS_2: 'Progress the Prometheus storyline (mission: Offender)',
+  ACH_PROMETHEUS_3: 'Progress the Prometheus storyline (mission: Shadowed)',
+  ACH_PROMETHEUS_4: 'Progress the Prometheus storyline',
+  ACH_PROMETHEUS_5: 'Dodge an orbital laser (Prometheus storyline, mission: Dispatch)',
+  ACH_PROMETHEUS_6: 'Progress the Prometheus storyline (mission: Fracture)',
+  ACH_PROMETHEUS_7: 'Progress the Prometheus storyline',
+  ACH_NULLSEC_STORY: 'Complete the Prometheus story mission where Hans is mentioned',
+  ACH_SAVED_CHURCH: 'Listen to the hidden transmissions in the Null Sector',
+  ACH_METEOR_EVENT: 'Witness a meteorite impact on Prometheus',
+  ACH_MUTATION: 'Defeat an enzyme-mutated creature in the Null Sector',
+  ACH_ICEBREAKER: 'Encounter the Giant Beast in the Null Sector',
+  ACH_CRUSHED: 'Get crushed by the Giant Beast in the Null Sector',
+  ACH_DESTROY_DRONE: 'Destroy a drone during the Rimetusk campaign',
+  // Elysium — Dangerous Horizons story + secrets
+  ACH_HOME_SWEET_HOME: 'Discover Eden (main mission)',
+  ACH_ERIS_INQUISITION: 'Complete the mission: Lost',
+  ACH_ENCRYPTED: 'Complete the mission: Relics',
+  ACH_LAB_RAT: 'Complete the mission: Nexus',
+  ACH_DECEIT: 'Complete the mission: Fallout',
+  ACH_THERMONUCLEAR: 'Complete the mission: Rift',
+  ACH_AT_ALL_COSTS: 'Complete the mission: Reckoning',
+  ACH_FOR_MO: 'Complete the 6 Dangerous Horizons missions',
+  ACH_PLOT_ARMOR: 'Try to damage a TEI team member (shoot them)',
+  ACH_GHOSTED: 'Kill a Specter',
+  ACH_GONE_FISSION: 'Fish in a radioactive area',
+}
+
 // Turn ACH_KILL_SANDWORM_BOSS -> kill-sandworm-boss; keep ids unique & stable.
 const seen = new Set()
 function slugFor(apiname) {
@@ -79,7 +114,7 @@ const achievements = list.map((a) => ({
   id: slugFor(a.name),
   steamApiName: a.name,
   name: (a.displayName ?? a.name).trim(),
-  description: (a.description ?? '').trim(),
+  description: (a.description ?? '').trim() || HIDDEN_DESCRIPTIONS[a.name] || '',
   icon: a.icon ?? undefined,
   iconGray: a.icongray ?? undefined,
   hidden: a.hidden === 1 ? true : undefined,
@@ -99,4 +134,6 @@ writeFileSync(
 )
 
 const hidden = achievements.filter((a) => a.hidden).length
+const missingDesc = achievements.filter((a) => !a.description).length
 console.log(`✅ Wrote src/data/icarus/achievements.ts — ${achievements.length} achievements (${hidden} hidden).`)
+if (missingDesc) console.log(`   ⚠️  ${missingDesc} still have no description (add them to HIDDEN_DESCRIPTIONS).`)

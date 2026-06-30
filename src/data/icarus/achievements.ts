@@ -480,7 +480,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "icebreaker",
     "steamApiName": "ACH_ICEBREAKER",
     "name": "What is That?",
-    "description": "",
+    "description": "Encounter the Giant Beast in the Null Sector",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/fe6e5e1fbebc904d41274e1b1062b97cc3170149.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/be8bcae1daa5481fb39f17206f80814d1198bf9c.jpg",
     "hidden": true
@@ -489,7 +489,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "crushed",
     "steamApiName": "ACH_CRUSHED",
     "name": "Press F to Pay Respects",
-    "description": "",
+    "description": "Get crushed by the Giant Beast in the Null Sector",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/e0fb256fc1f25173e5200f88e9948ba84de1a4df.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/76ee1b1229825e7f9d67aeae3174e0ac2f1c11e4.jpg",
     "hidden": true
@@ -522,7 +522,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "mutation",
     "steamApiName": "ACH_MUTATION",
     "name": "Enzymic Mutation",
-    "description": "",
+    "description": "Defeat an enzyme-mutated creature in the Null Sector",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/5cbba35d4bde209e623c01474a21606d3ad2f05f.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/ee0e5510d49ae1ea5385b51adbf825e0360f2107.jpg",
     "hidden": true
@@ -539,7 +539,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "saved-church",
     "steamApiName": "ACH_SAVED_CHURCH",
     "name": "You Ever Wonder Why We're Here?",
-    "description": "",
+    "description": "Listen to the hidden transmissions in the Null Sector",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/782ac0e7b4f80cc7494578c76c559b8b89077fb8.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/00dea95be77a41cde67afc0db3dea6f2ffacd4ee.jpg",
     "hidden": true
@@ -620,7 +620,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "destroy-drone",
     "steamApiName": "ACH_DESTROY_DRONE",
     "name": "Signal Jammed",
-    "description": "",
+    "description": "Destroy a drone during the Rimetusk campaign",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/3564e3710902ffa81f64fa5e6f6b3ff8fb0d22c9.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/4962d0ba650394c4c290782e545e1f4889348085.jpg",
     "hidden": true
@@ -661,7 +661,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "prometheus-1",
     "steamApiName": "ACH_PROMETHEUS_1",
     "name": "Soft Landing",
-    "description": "",
+    "description": "Land in Prometheus for the first time",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/85d9e6b3972a397ca65e15b19210b0a6676dc4b8.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/2a5fc0e1924b8541d5e76bd3b6c9f598fd25fbc4.jpg",
     "hidden": true
@@ -670,7 +670,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "prometheus-2",
     "steamApiName": "ACH_PROMETHEUS_2",
     "name": "Unknown Caller",
-    "description": "",
+    "description": "Progress the Prometheus storyline (mission: Offender)",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/88a38f0f25503d09868476217ef594490f1a2f2c.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/e9af1c71979a30213e9b825e42d6749d2063601b.jpg",
     "hidden": true
@@ -679,7 +679,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "prometheus-3",
     "steamApiName": "ACH_PROMETHEUS_3",
     "name": "One Of Us",
-    "description": "",
+    "description": "Progress the Prometheus storyline (mission: Shadowed)",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/8060084ea2ca843adcb3e146d1ffa4989eac419e.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/88e02ba615324965435bc72345e236c706e4c424.jpg",
     "hidden": true
@@ -688,7 +688,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "prometheus-4",
     "steamApiName": "ACH_PROMETHEUS_4",
     "name": "Thanks, Buddy",
-    "description": "",
+    "description": "Progress the Prometheus storyline",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/98561f4de0410a8aa0eaad66aa449fe72dee7840.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/c69af98d2fbf622944b0a44b8304eb0b4f1c8625.jpg",
     "hidden": true
@@ -697,7 +697,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "prometheus-5",
     "steamApiName": "ACH_PROMETHEUS_5",
     "name": "That Was Close",
-    "description": "",
+    "description": "Dodge an orbital laser (Prometheus storyline, mission: Dispatch)",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/90e3c5986b3be4f96b499ae7b6ead32469e47ff0.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/b2c1a6d999ada060763df6e49fad7a7c449d991e.jpg",
     "hidden": true
@@ -706,7 +706,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "prometheus-6",
     "steamApiName": "ACH_PROMETHEUS_6",
     "name": "AWOL",
-    "description": "",
+    "description": "Progress the Prometheus storyline (mission: Fracture)",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/355402dacac9a69a946dda9ece21430d072fcee9.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/d2264e0bb9bfbc50c0794cccd8752b5492ff3811.jpg",
     "hidden": true
@@ -715,7 +715,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "prometheus-7",
     "steamApiName": "ACH_PROMETHEUS_7",
     "name": "What is this place?",
-    "description": "",
+    "description": "Progress the Prometheus storyline",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/24e2106e03372624e8c96a8e4ea454f0f853e8aa.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/a15367e14ef0794e8ecef06f759135365ab13012.jpg",
     "hidden": true
@@ -724,7 +724,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "nullsec-story",
     "steamApiName": "ACH_NULLSEC_STORY",
     "name": "Poor Hans",
-    "description": "",
+    "description": "Complete the Prometheus story mission where Hans is mentioned",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/3a72bfebaf602c9de9e62fd84b8c3c2cf625affc.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/7e42914a1c48e3749ca262d36b60b687d435346a.jpg",
     "hidden": true
@@ -885,7 +885,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "meteor-event",
     "steamApiName": "ACH_METEOR_EVENT",
     "name": "Starstruck",
-    "description": "",
+    "description": "Witness a meteorite impact on Prometheus",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/ced021072a889997ab9dc2a314d4c7ff3c48e522.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/5559c9b796b500f000670c7dfa79d9150fa9a944.jpg",
     "hidden": true
@@ -990,7 +990,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "at-all-costs",
     "steamApiName": "ACH_AT_ALL_COSTS",
     "name": "At All Costs",
-    "description": "",
+    "description": "Complete the mission: Reckoning",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/e07651e9092d2c0b3e70ed23bd839243b99a783c.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/0d13884be28d6dddb6de8fc544777f8138a1b3fe.jpg",
     "hidden": true
@@ -1023,7 +1023,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "deceit",
     "steamApiName": "ACH_DECEIT",
     "name": "Deceit",
-    "description": "",
+    "description": "Complete the mission: Fallout",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/8b7111e9d8b77d3c7344f38851bd86cee5f18607.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/3f055a6e23a239e71993ede75f28ac7539d1aacd.jpg",
     "hidden": true
@@ -1032,7 +1032,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "home-sweet-home",
     "steamApiName": "ACH_HOME_SWEET_HOME",
     "name": "Home Sweet Home",
-    "description": "",
+    "description": "Discover Eden (main mission)",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/e7ced88d2f7820d0c4c00afd9f964b03ef92399a.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/9cb2b5838beb02d409ce56a635831ddb20ff6f95.jpg",
     "hidden": true
@@ -1049,7 +1049,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "encrypted",
     "steamApiName": "ACH_ENCRYPTED",
     "name": "Encrypted",
-    "description": "",
+    "description": "Complete the mission: Relics",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/e7d3b89f9d285972b6286a25bfc62008336d46e8.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/8a9c197c0cc3dba686653baf21b3bb49a7a6cf25.jpg",
     "hidden": true
@@ -1058,7 +1058,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "eris-inquisition",
     "steamApiName": "ACH_ERIS_INQUISITION",
     "name": "The Eris Inquisition",
-    "description": "",
+    "description": "Complete the mission: Lost",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/5832f34acf5f16a4717493e6402298cb322d19fc.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/248ec2f523685dbf5c038f26846a8238a875117c.jpg",
     "hidden": true
@@ -1075,7 +1075,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "for-mo",
     "steamApiName": "ACH_FOR_MO",
     "name": "For Mo",
-    "description": "",
+    "description": "Complete the 6 Dangerous Horizons missions",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/413015b044b1c26ef3ed84fc214ef9c7cc03e495.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/b19e07f24e67956229fbc7650bc1d44be6e11027.jpg",
     "hidden": true
@@ -1092,7 +1092,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "ghosted",
     "steamApiName": "ACH_GHOSTED",
     "name": "Ghosted",
-    "description": "",
+    "description": "Kill a Specter",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/edf318086c2f80d3cdd59aaa9da1e064e113c59f.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/4084f5e52352d3cc8d32057d5340b98b1292faf8.jpg",
     "hidden": true
@@ -1109,7 +1109,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "gone-fission",
     "steamApiName": "ACH_GONE_FISSION",
     "name": "Gone Fission",
-    "description": "",
+    "description": "Fish in a radioactive area",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/0ebc3b2fb8c8068206cf275fecaa810d00450a73.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/ade85dc6c2240f2f0addce1857b602c995f7fb6f.jpg",
     "hidden": true
@@ -1174,7 +1174,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "lab-rat",
     "steamApiName": "ACH_LAB_RAT",
     "name": "Lab Rat",
-    "description": "",
+    "description": "Complete the mission: Nexus",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/7b3b641ca98f4a0a38f914b43f1a694a23660dd5.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/9e9f55099836d04b774c017e76ff68be85bc2b6f.jpg",
     "hidden": true
@@ -1263,7 +1263,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "plot-armor",
     "steamApiName": "ACH_PLOT_ARMOR",
     "name": "Plot Armor",
-    "description": "",
+    "description": "Try to damage a TEI team member (shoot them)",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/2d2290110dc60041da0dff3c210e08fe68a0159a.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/f638da542a170aa2f172be9cde051950216cc4d4.jpg",
     "hidden": true
@@ -1360,7 +1360,7 @@ export const icarusAchievements: IcarusAchievement[] = [
     "id": "thermonuclear",
     "steamApiName": "ACH_THERMONUCLEAR",
     "name": "Thermonuclear",
-    "description": "",
+    "description": "Complete the mission: Rift",
     "icon": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/04d621cc0018ad5cbd3fed52999a48d38a7c2066.jpg",
     "iconGray": "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1149460/a4874447fb933d440fd8a22a7b7b2586fe983216.jpg",
     "hidden": true
