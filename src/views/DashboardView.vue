@@ -1,101 +1,71 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useAchievementsStore } from '@/stores/achievements'
-import AchievementRow from '@/components/AchievementRow.vue'
-import ProgressBar from '@/components/ProgressBar.vue'
+import { ref, watch } from 'vue'
+import CoralIslandView from './CoralIslandView.vue'
+import IcarusView from './IcarusView.vue'
 
-type Filter = 'all' | 'missing' | 'done'
-const store = useAchievementsStore()
-const filter = ref<Filter>('all')
+type GameId = 'coral-island' | 'icarus'
 
-const list = computed(() => {
-  let items = store.all
-  if (filter.value === 'missing') items = store.missing
-  else if (filter.value === 'done') items = store.all.filter((a) => store.isUnlocked(a))
-  // Missing on top, completed at the bottom (stable within each group).
-  return [...items].sort((a, b) => Number(store.isUnlocked(a)) - Number(store.isUnlocked(b)))
-})
+const TABS: { id: GameId; label: string }[] = [
+  { id: 'coral-island', label: '🌴 Coral Island' },
+  { id: 'icarus', label: '🪐 Icarus' },
+]
 
-const pct = computed(() =>
-  store.totalCount > 0 ? Math.round((store.unlockedCount / store.totalCount) * 100) : 0,
-)
+const STORAGE_KEY = 'gameach:activeGame'
+const stored = localStorage.getItem(STORAGE_KEY)
+const active = ref<GameId>(stored === 'icarus' ? 'icarus' : 'coral-island')
+
+// Remember the last viewed game so switching is sticky across reloads.
+watch(active, (id) => localStorage.setItem(STORAGE_KEY, id))
 </script>
 
 <template>
-  <section>
-    <div class="overview">
-      <div class="heading">
-        <h1>Coral Island</h1>
-        <span class="count">{{ store.unlockedCount }} / {{ store.totalCount }} · {{ pct }}%</span>
-      </div>
-      <ProgressBar :value="store.unlockedCount" :max="store.totalCount" />
-    </div>
+  <div class="tabs" role="tablist">
+    <button
+      v-for="tab in TABS"
+      :key="tab.id"
+      class="tab"
+      :class="{ active: active === tab.id }"
+      role="tab"
+      :aria-selected="active === tab.id"
+      @click="active = tab.id"
+    >
+      {{ tab.label }}
+    </button>
+  </div>
 
-    <div class="filters">
-      <button :class="{ active: filter === 'all' }" @click="filter = 'all'">Alle</button>
-      <button :class="{ active: filter === 'missing' }" @click="filter = 'missing'">Mangler</button>
-      <button :class="{ active: filter === 'done' }" @click="filter = 'done'">Låst op</button>
-    </div>
-
-    <div class="list">
-      <AchievementRow v-for="a in list" :key="a.id" :achievement="a" />
-    </div>
-  </section>
+  <!-- Both games are kept alive so per-game filter state survives a tab switch. -->
+  <KeepAlive>
+    <CoralIslandView v-if="active === 'coral-island'" />
+    <IcarusView v-else />
+  </KeepAlive>
 </template>
 
 <style scoped>
-.overview {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 1.25rem 1.5rem;
+.tabs {
+  display: flex;
+  gap: 0.4rem;
   margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
 }
-.heading {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 0.75rem;
-}
-.heading h1 {
-  font-size: 1.5rem;
-  color: var(--color-heading);
-}
-.heading .count {
-  color: var(--color-accent);
-  font-weight: 600;
-}
-.filters {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-.filters button {
-  padding: 0.4rem 0.9rem;
-  border-radius: 999px;
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
+.tab {
+  padding: 0.6rem 1.1rem;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
   color: var(--color-text-muted);
+  font-size: 0.95rem;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 0.85rem;
   transition:
     color 0.15s,
-    border-color 0.15s,
-    background 0.15s;
+    border-color 0.15s;
 }
-.filters button:hover {
-  border-color: var(--color-border-hover);
+.tab:hover {
   color: var(--color-text);
 }
-.filters button.active {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
-  color: #1a1206;
-  font-weight: 600;
-}
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
+.tab.active {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
 }
 </style>

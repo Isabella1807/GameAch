@@ -20,8 +20,10 @@ import { RouterLink, RouterView } from 'vue-router'
 
   <footer class="app-footer">
     Achievement-data fra
-    <a href="https://store.steampowered.com/app/1158160/Coral_Island/" target="_blank" rel="noopener">Steam</a>.
-    gameach er ikke tilknyttet eller godkendt af Valve eller Steam.
+    <a href="https://store.steampowered.com/app/1158160/Coral_Island/" target="_blank" rel="noopener">Coral Island</a>
+    og
+    <a href="https://store.steampowered.com/app/1149460/Icarus/" target="_blank" rel="noopener">Icarus</a>
+    på Steam. gameach er ikke tilknyttet eller godkendt af Valve eller Steam.
   </footer>
 </template>
 
